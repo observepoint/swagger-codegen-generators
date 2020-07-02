@@ -6,6 +6,7 @@ import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.media.Schema;
 import org.apache.commons.lang3.StringUtils;
 
+import java.math.BigDecimal;
 import java.util.Map;
 
 import static io.swagger.codegen.v3.CodegenConstants.HAS_VALIDATION_EXT_NAME;
@@ -24,9 +25,15 @@ public class OpenAPIUtil {
         codegenProperty.pattern = schema.getPattern();
         codegenProperty.minLength = schema.getMinLength();
         codegenProperty.maxLength = schema.getMaxLength();
+        codegenProperty.minimum = bigDecimalToString(schema.getMinimum());
+        codegenProperty.maximum = bigDecimalToString(schema.getMaximum());
         if (codegenProperty.pattern != null || codegenProperty.minLength != null || codegenProperty.maxLength != null) {
             codegenProperty.getVendorExtensions().put(HAS_VALIDATION_EXT_NAME, Boolean.TRUE);
         }
+    }
+
+    private static String bigDecimalToString(BigDecimal bd) {
+        return bd != null ? bd.toEngineeringString(): null;
     }
 
     public static String getSimpleRef(String ref) {
