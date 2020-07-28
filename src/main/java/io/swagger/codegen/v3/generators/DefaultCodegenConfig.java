@@ -2106,7 +2106,7 @@ public abstract class DefaultCodegenConfig implements CodegenConfig {
                             CodegenParameter formParameter = fromParameter(new Parameter()
                                     .name(propertyName)
                                     .required(body.getRequired())
-                                    .schema(propertyMap.get(propertyName)), imports);
+                                    .schema(propertyMap.get(propertyName)), imports, schemas);
                             if (isMultipart) {
                                 formParameter.getVendorExtensions().put(CodegenConstants.IS_MULTIPART_EXT_NAME, Boolean.TRUE);
                             }
@@ -2151,7 +2151,7 @@ public abstract class DefaultCodegenConfig implements CodegenConfig {
                 if (StringUtils.isNotBlank(param.get$ref())) {
                     param = getParameterFromRef(param.get$ref(), openAPI);
                 }
-                CodegenParameter codegenParameter = fromParameter(param, imports);
+                CodegenParameter codegenParameter = fromParameter(param, imports, schemas);
                 // rename parameters to make sure all of them have unique names
                 if (ensureUniqueParams) {
                     while (true) {
@@ -2360,7 +2360,7 @@ public abstract class DefaultCodegenConfig implements CodegenConfig {
      * @param imports set of imports for library/package/module
      * @return Codegen Parameter object
      */
-    public CodegenParameter fromParameter(Parameter parameter, Set<String> imports) {
+    public CodegenParameter fromParameter(Parameter parameter, Set<String> imports, Map<String, Schema> schemas) {
         CodegenParameter codegenParameter = CodegenModelFactory.newInstance(CodegenModelType.PARAMETER);
         codegenParameter.baseName = parameter.getName();
         codegenParameter.description = escapeText(parameter.getDescription());
@@ -2380,6 +2380,12 @@ public abstract class DefaultCodegenConfig implements CodegenConfig {
 
         if (parameter.getSchema() != null) {
             Schema parameterSchema = parameter.getSchema();
+
+            if (StringUtils.isNotBlank(parameterSchema.get$ref())) {
+                String schemaName = OpenAPIUtil.getSimpleRef(parameterSchema.get$ref());
+                parameterSchema = schemas.get(schemaName);
+            }
+
             String collectionFormat = null;
             if (parameterSchema instanceof ArraySchema) { // for array parameter
                 final ArraySchema arraySchema = (ArraySchema) parameterSchema;

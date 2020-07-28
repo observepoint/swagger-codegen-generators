@@ -354,7 +354,7 @@ public class JavaModelTest {
         Assert.assertEquals(cm.imports.size(), 4);
         Assert.assertEquals(Sets.intersection(cm.imports, Sets.newHashSet("Schema", "List", "ArrayList", "Children")).size(), 4);
     }
-    
+
     @Test(description = "convert an array model")
     public void arrayModelTestUsingOas2() {
         final Schema schema = new ArraySchema()
@@ -390,7 +390,7 @@ public class JavaModelTest {
         Assert.assertEquals(cm.imports.size(), 4);
         Assert.assertEquals(Sets.intersection(cm.imports, Sets.newHashSet("Schema", "Map", "HashMap", "Children")).size(), 4);
     }
-    
+
     @Test(description = "convert an map model")
     public void mapModelTestUsingOas2() {
         final Schema schema = new MapSchema()
@@ -408,7 +408,7 @@ public class JavaModelTest {
         Assert.assertEquals(cm.imports.size(), 4);
         Assert.assertEquals(Sets.intersection(cm.imports, Sets.newHashSet("ApiModel", "Map", "HashMap", "Children")).size(), 4);
     }
-    
+
     @Test(description = "convert a model with upper-case property names")
     public void upperCaseNamesTest() {
         final Schema schema = new Schema()
@@ -579,7 +579,7 @@ public class JavaModelTest {
                 .name("limit")
                 .required(true);
         final DefaultCodegenConfig codegen = new JavaClientCodegen();
-        final CodegenParameter cm = codegen.fromParameter(parameter, null);
+        final CodegenParameter cm = codegen.fromParameter(parameter, null, null);
 
         Assert.assertNull(cm.allowableValues);
     }
@@ -897,7 +897,7 @@ public class JavaModelTest {
                 .items(new Schema<>().$ref("#/components/schemas/Pet"));
         Operation operation = new Operation()
                 .requestBody(new RequestBody()
-                        .content(new Content().addMediaType("application/json", 
+                        .content(new Content().addMediaType("application/json",
                                 new MediaType().schema(testSchema))))
                 .responses(
                         new ApiResponses().addApiResponse("204", new ApiResponse()
@@ -926,7 +926,7 @@ public class JavaModelTest {
         Operation operation = new Operation().responses(
                 new ApiResponses().addApiResponse("200", new ApiResponse()
                         .description("Ok response")
-                        .content(new Content().addMediaType("application/json", 
+                        .content(new Content().addMediaType("application/json",
                                 new MediaType().schema(testSchema)))));
         final Map<String, Schema> allDefinitions = Collections.singletonMap("Pet", new ObjectSchema());
         final DefaultCodegenConfig codegen = new JavaClientCodegen();
@@ -970,7 +970,7 @@ public class JavaModelTest {
                         .items(new Schema<>().$ref("#/components/schemas/Pet")));
         Operation operation = new Operation()
                 .requestBody(new RequestBody()
-                        .content(new Content().addMediaType("application/json", 
+                        .content(new Content().addMediaType("application/json",
                                 new MediaType().schema(testSchema))))
                 .responses(
                         new ApiResponses().addApiResponse("204", new ApiResponse()
@@ -1000,7 +1000,7 @@ public class JavaModelTest {
         Operation operation = new Operation().responses(
                 new ApiResponses().addApiResponse("200", new ApiResponse()
                         .description("Ok response")
-                        .content(new Content().addMediaType("application/json", 
+                        .content(new Content().addMediaType("application/json",
                                 new MediaType().schema(testSchema)))));
         final Map<String, Schema> allDefinitions = Collections.singletonMap("Pet", new ObjectSchema());
         final DefaultCodegenConfig codegen = new JavaClientCodegen();
